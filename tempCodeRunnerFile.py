@@ -1,0 +1,1 @@
+option = int(input("select an option: "))
