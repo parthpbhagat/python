@@ -1,191 +1,218 @@
+
+#    pr 8
+
+
 import numpy as np
-class Create_a_array:
+
+class NumpyArrayAnalyzer:
     def __init__(self):
-        pass
+        # Stores the current working array
+        self.array = None
+        # Stores the original array (before modification)
+        self.original_array = None
+
     def create_1D_array(self):
+        """Create a 1D NumPy array from user input"""
         try:
-           self.element = input("Enter the elements of the array, Sepreted by space: ")
-           self.elements_list = list(map(int, self.element.split()))
-           self.array = np.array(self.elements_list)
-           print("array create successfully")
-           print("1D array: ",self.array)
+            elements = input("Enter elements (space-separated): ")
+            self.array = np.array(list(map(int, elements.split())))
+            self.original_array = self.array.copy()  # Save original
+            print("1D array created:", self.array)
         except ValueError:
-           print("Input Error: Please enter valid integers.")
-        except Exception as e:
-           print(f"Unexpected error: {e}")
+            print("Error: Please enter valid integers.")
 
     def create_2D_array(self):
+        """Create a 2D NumPy array with specified rows and columns"""
         try:
-          self.row = int(input("enter the number of row: "))
-          self.coloumns = int(input("Enter the number of coloumns: "))
-          self.total_elements = self.row * self.coloumns
-          self.element = input(f"Enter {self.total_elements} elements of the array, sepreted by space: ")
-          self.elements_list = list(map(int,self.element.split()))
-          self.origneal_array = np.array(self.elements_list).reshape(self.row,self.coloumns)
-          print("2D array created successfully")
-          print("2D array: "
-              ,self.origneal_array)
+            rows = int(input("Enter number of rows: "))
+            cols = int(input("Enter number of columns: "))
+            elements = input(f"Enter {rows * cols} elements (space-separated): ")
+            data = list(map(int, elements.split()))
+            if len(data) != rows * cols:
+                print("Error: Incorrect number of elements.")
+                return
+            self.original_array = np.array(data).reshape(rows, cols)
+            self.array = self.original_array.copy()
+            print("2D array created:\n", self.original_array)
         except ValueError:
-            print("Input Error: Please enter valid integers.")
-        except Exception as e:
-            print(f"Unexpected error: {e}")
+            print("Error: Please enter valid integers.")
 
-    def addition_array(self):
-        try: 
-            self.element = input(f"enter the same size array ({self.total_elements} elements sepreted by space): ")
-            self.elements_list = list(map(int,self.element.split()))
-            self.second_array = np.array([self.elements_list]).reshape(self.row,self.coloumns)
-            self.addition = self.origneal_array + self.second_array
-            print("result fo addition: ")
-            print(self.addition)
+    def create_3D_array(self):
+        """Create a 3D NumPy array with specified dimensions"""
+        try:
+            rows = int(input("Enter number of rows: "))
+            cols = int(input("Enter number of columns: "))
+            layers = int(input("Enter number of layers: "))
+            total = rows * cols * layers
+            elements = input(f"Enter {total} elements (space-separated): ")
+            data = list(map(int, elements.split()))
+            if len(data) != total:
+                print(f"Error: You must enter exactly {total} elements.")
+                return
+            self.array = np.array(data).reshape(rows, cols, layers)
+            self.original_array = self.array.copy()
+            print("3D array created:\n", self.array)
         except ValueError:
-            print("Input Error: Please enter valid integers.")
+            print("Error: Please enter valid integers.")
+
+    # =================== STATISTICS METHODS ====================
+    def mean(self):
+        """Calculate mean"""
+        if self.array is not None:
+            print("Mean:", np.mean(self.array))
+
+    def median(self):
+        """Calculate median"""
+        if self.array is not None:
+            print("Median:", np.median(self.array))
+
+    def std_dev(self):
+        """Calculate standard deviation"""
+        if self.array is not None:
+            print("Standard deviation:", np.std(self.array))
+
+    def variance(self):
+        """Calculate variance"""
+        if self.array is not None:
+            print("Variance:", np.var(self.array))
+
+    def sum(self):
+        """Calculate sum of original array"""
+        if self.original_array is not None:
+            print("Sum:", np.sum(self.original_array))
+
+    # =================== OTHER OPERATIONS ====================
+    def sort(self):
+        """Sort the array"""
+        if self.original_array is not None:
+            print("Sorted array:\n", np.sort(self.original_array, axis=None))
+
+    def filter_even(self):
+        """Filter even numbers"""
+        if self.array is not None:
+            print("Even numbers:", self.array[self.array % 2 == 0])
+
+    def search(self):
+        """Search for a value in the array"""
+        if self.original_array is not None:
+            try:
+                value = int(input("Enter a value to search: "))
+                result = np.where(self.original_array == value)
+                print(f"Value found at: {result}")
+            except ValueError:
+                print("Please enter a valid integer.")
+
+    def split_array(self):
+        """Split array into equal parts"""
+        if self.original_array is not None:
+            try:
+                num = int(input("Enter the number of splits: "))
+                splits = np.array_split(self.original_array, num)
+                print("Array split into:")
+                for i, s in enumerate(splits):
+                    print(f"Part {i + 1}:\n{s}")
+            except ValueError:
+                print("Please enter a valid number.")
+
+    def combine_vertical(self):
+        """Stack array vertically"""
+        try:
+            elements = input("Enter elements to stack vertically (space-separated): ")
+            new_array = np.array(list(map(int, elements.split()))).reshape(self.original_array.shape)
+            combined = np.vstack((self.original_array, new_array))
+            print("Vertically combined array:\n", combined)
         except Exception as e:
-            print(f"Unexpected error: {e}")
-        
+            print("Error:", e)
+
+    def combine_horizontal(self):
+        """Stack array horizontally"""
+        try:
+            elements = input("Enter elements to stack horizontally (space-separated): ")
+            new_array = np.array(list(map(int, elements.split()))).reshape(self.original_array.shape)
+            combined = np.hstack((self.original_array, new_array))
+            print("Horizontally combined array:\n", combined)
+        except Exception as e:
+            print("Error:", e)
+
+    # =================== ARITHMETIC OPERATIONS ====================
+    def addition_array(self):
+        """Add another array to the current array"""
+        try:
+            elements = input("Enter elements to add (space-separated): ")
+            new_array = np.array(list(map(int, elements.split()))).reshape(self.array.shape)
+            result = self.array + new_array
+            print("Addition result:\n", result)
+        except Exception as e:
+            print("Error:", e)
 
     def subtraction_array(self):
-        try: 
-           self.element = input(f"Enter the same size ({self.total_elements} elements sepreded bi space): ")
-           self.elements_list = list(map(int,self.element.split()))
-           self.second_array = np.array([self.elements_list]).reshape(self.row, self.coloumns)
-           self.subtraction = self.origneal_array - self.second_array
-           print("result of subtraction: ")
-           print(self.subtraction)
-        except ValueError:
-            print("Input Error: Please enter valid integers.")
+        """Subtract another array from the current array"""
+        try:
+            elements = input("Enter elements to subtract (space-separated): ")
+            new_array = np.array(list(map(int, elements.split()))).reshape(self.array.shape)
+            result = self.array - new_array
+            print("Subtraction result:\n", result)
         except Exception as e:
-            print(f"Unexpected error: {e}")
+            print("Error:", e)
 
     def multiplication_array(self):
-        try: 
-           self.element = input(f"Enter the same size of array ({self.total_elements} Elements sepreted by space): ")
-           self. elements_list = list(map(int,self.element.split()))
-           self.second_array = np.array([self.elements_list]).reshape(self.row,self.coloumns)
-           self.multiplication = self.origneal_array * self.second_array
-           print("result of multiplication: ")
-           print(self.multiplication)
-        except ValueError:
-            print("Input Error: Please enter valid integers.")
+        """Multiply another array with the current array"""
+        try:
+            elements = input("Enter elements to multiply (space-separated): ")
+            new_array = np.array(list(map(int, elements.split()))).reshape(self.array.shape)
+            result = self.array * new_array
+            print("Multiplication result:\n", result)
         except Exception as e:
-            print(f"Unexpected error: {e}")
+            print("Error:", e)
 
     def divided_array(self):
-        try: 
-           self.element = input(f"Enter the same size of array ({self.total_elements} Elements sepreted by space): ")
-           self. elements_list = list(map(float,self.element.split()))
-           self.second_array = np.array([self.elements_list]).reshape(self.row,self.coloumns)
-           self.division = self.origneal_array / self.second_array
-           print("result of division: ")
-           print(self.division)
-        except ValueError:
-            print("Input Error: Please enter valid integers.")
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-
-
-    def combine_array_verticaly(self):
-        try: 
-          self.element = input(f"enter the anather array to combine ({self.total_elements} seprated by space): ")
-          self.elements_list = list(map(int,self.element.split()))
-          self.second_array  = np.array([self.elements_list]).reshape(self.row,self.coloumns)
-          self.combine = np.concatenate((self.origneal_array,self.second_array),axis=0)
-          print("Combine array (Verticle stac): ")
-          print(self.combine)
-        except ValueError:
-            print("Input Error: Please enter valid integers.")
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-
-    
-    def combine_array_hirizentaly(self):
-        try: 
-           self.element = input(f"enter the anather array to combine ({self.total_elements} seprated by space): ")
-           self.elements_list = list(map(int,self.element.split()))
-           self.second_array  = np.array([self.elements_list]).reshape(self.row,self.coloumns)
-           self.combine = np.concatenate((self.origneal_array,self.second_array),axis=1)
-           print("Combine array (Horizental stac): ")
-           print(self.combine)
-        except ValueError:
-            print("Input Error: Please enter valid integers.")
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-        
-    def sort_the_array(self):
-        try: 
-           self.sorted_array = np.sort(self.origneal_array)
-           print("sorted array: ")
-           print(self.sorted_array)
-        except ValueError:
-            print("Input Error: Please enter valid integers.")
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-
-    def sum_of_the_array(self):
+        """Divide current array by another array"""
         try:
-           self.sum = np.sum(self.origneal_array)
-           print("sum of all elements: ")
-           print(self.sum)
-        except ValueError:
-            print("Input Error: Please enter valid integers.")
+            elements = input("Enter elements to divide (space-separated): ")
+            new_array = np.array(list(map(int, elements.split()))).reshape(self.array.shape)
+            result = self.array / new_array
+            print("Division result:\n", result)
         except Exception as e:
-            print(f"Unexpected error: {e}")
+            print("Error:", e)
 
-    
-    def create_3D_array(self):
-        self.row = int(input("Enter the element of the row: "))
-        self.coloumns = int(input("Enter the number of coloumns: "))
-        self.total_elements = self.row * self.coloumns * 2
-        self.element = input(f"Enter {self.total_elements } elements of the array, sepreted by space: ")
-        self.elements_list= list(map(int,self.element.split()))
+# ========================= MAIN DRIVER CODE =========================
 
-      # Validate if the number of elements matches the required total elements
-        if len(self.elements_list) != self.total_elements:
-            print(f"Error: You need to enter exactly {self.total_elements} elements.")
-            return
-       
-        self.array = np.array([self.elements_list]).reshape(self.row,self.coloumns,2)
-        print("3D array created successfully")
-        print("3D array: ",self.array)
+ca = NumpyArrayAnalyzer()
 
-
-
-
-
-
-
-
-
-
-
-
-ca = Create_a_array()
-
-print("welcome to the numpy anylizer!")
+print("Welcome to the NumPy Analyzer!")
 print("=" * 40)
+
 while True:
-    print("select an option: ")
-    print("1. create numpy array")
-    print("2. parform mathemeticle oprection")
-    print("3. combine or split array")
-    print("4. search, sort, or filtter array")
-    print("5. compute aggrigate and statastic")
-    print("6. exit")
+    print("\nSelect an sub_option:")
+    print("1. Create NumPy array")
+    print("2. Perform mathematical operation")
+    print("3. Combine or split array")
+    print("4. Search, sort, or filter array")
+    print("5. Compute aggregate and statistics")
+    print("6. Exit")
 
-    option = int(input("enter your choice: "))
+    try:
+        main_sub_option = int(input("Enter your choice: "))
+    except ValueError:
+        print("Please enter a valid integer.")
+        continue
 
-    match option:
+    match main_sub_option:
         case 1:
             while True:
-                print("select the type of array to create: ")
+                print("\nSelect the type of array to create:")
                 print("1. 1D array")
                 print("2. 2D array")
                 print("3. 3D array")
                 print("4. Go to main menu")
 
-                option = int(input("enter your option: "))
+                try:
+                    array_sub_option = int(input("Enter your sub_option: "))
+                except ValueError:
+                    print("Invalid input.")
+                    continue
 
-                match option:
+                match array_sub_option:
                     case 1:
                         ca.create_1D_array()
                     case 2:
@@ -193,20 +220,24 @@ while True:
                     case 3:
                         ca.create_3D_array()
                     case 4:
-                        pass
                         break
+
         case 2:
             while True:
-                print("Perform mathemetical oprection: ")
+                print("\nPerform mathematical operation:")
                 print("1. Addition")
                 print("2. Subtraction")
                 print("3. Multiplication")
-                print("4. division")
+                print("4. Division")
                 print("5. Go to main menu")
 
-                option = int(input("Enter your option: "))
+                try:
+                    math_sub_option = int(input("Enter your sub_option: "))
+                except ValueError:
+                    print("Invalid input.")
+                    continue
 
-                match option:
+                match math_sub_option:
                     case 1:
                         ca.addition_array()
                     case 2:
@@ -216,102 +247,101 @@ while True:
                     case 4:
                         ca.divided_array()
                     case 5:
-                        pass
                         break
 
         case 3:
             while True:
-                print("combine and split array")
-                print("1. combine the array")
-                print("2. split the array")
-                print("3. Go to the main menu")
+                print("\nCombine and split array:")
+                print("1. Combine the array")
+                print("2. Split the array")
+                print("3. Go to main menu")
 
-                option = int(input("Enter your option: "))
+                try:
+                    combine_sub_option = int(input("Enter your sub_option: "))
+                except ValueError:
+                    print("Invalid input.")
+                    continue
 
-                match option:
+                match combine_sub_option:
                     case 1:
                         while True:
-
-                            print("Combine the array")
-                            print("1. vertical Concatinate")
-                            print("2. horizentaly Concatinate")
+                            print("Combine the array: ")
+                            print("1. Vertically concatenate")
+                            print("2. Horizontally concatenate")
                             print("3. Go to main menu")
 
-                            option = int(input("Enter your option: "))
+                            try:
+                                sub_sub_option = int(input("Enter your sub_option: "))
+                            except ValueError:
+                                print("Invalid input.")
+                                continue
 
-                            match option:
+                            match sub_sub_option:
                                 case 1:
-                                    ca.combine_array_verticaly()
+                                    ca.combine_vertical()
                                 case 2:
-                                    ca.combine_array_hirizentaly()
+                                    ca.combine_horizontal()
                                 case 3:
-                                    pass
                                     break
-
                     case 2:
-                        print("split the array: ")
-
+                        ca.split_array()
                     case 3:
-                        pass
                         break
-
 
         case 4:
             while True:
-                print("search, sort, and filtter array")
-                print("1. search the array")
-                print("2. sort the array")
-                print("3. filter the array")
-                print("4. Go to the main menu")
+                print("Search, sort, and filter array:")
+                print("1. Search the array")
+                print("2. Sort the array")
+                print("3. Filter the array (even numbers)")
+                print("4. Go to main menu")
 
-                option = int(input("enter your option: "))
+                try:
+                    filter_sub_option = int(input("Enter your sub_option: "))
+                except ValueError:
+                    print("Invalid input.")
+                    continue
 
-                match option:
+                match filter_sub_option:
                     case 1:
-                        pass
+                        ca.search()
                     case 2:
-                        print("sort the array: ")
-                        ca.sort_the_array()
+                        ca.sort()
                     case 3:
-                        pass
+                        ca.filter_even()
                     case 4:
-                        pass
                         break
+
         case 5:
             while True:
-
-                print("compute aggrigate and statastic")
-                print("1. sum")
-                print("2. mean")
-                print("3. midian")
-                print("4. standerd deveaction ")
-                print("5. veriance")
+                print("Compute aggregate and statistics:")
+                print("1. Sum")
+                print("2. Mean")
+                print("3. Median")
+                print("4. Standard deviation")
+                print("5. Variance")
                 print("6. Go to main menu")
 
-                option = int(input("Enter your choice: "))
+                try:
+                    stats_sub_option = int(input("Enter your choice: "))
+                except ValueError:
+                    print("Invalid input.")
+                    continue
 
-                match option:
+                match stats_sub_option:
                     case 1:
-                        ca.sum_of_the_array()
+                        ca.sum()
                     case 2:
-                        pass
+                        ca.mean()
                     case 3:
-                        pass
+                        ca.median()
                     case 4:
-                        pass
+                        ca.std_dev()
                     case 5:
-                        pass
+                        ca.variance()
                     case 6:
-                        pass
                         break
 
-
         case 6:
-            print("Thank you for using numpy anylizer! Goodby")
+            print("Thank you for using NumPy Analyzer! Goodbye.")
             break
-
-
-
-
-
-
