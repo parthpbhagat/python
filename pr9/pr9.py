@@ -5,7 +5,7 @@ import seaborn as sns
 
 class Data_analysis:
     def __init__(self):
-        self.df = None   # Initialize dataframe
+        self.df = None   
         self.x = None
         self.y = None
 
@@ -248,5 +248,4 @@ while True:
         case 8:
             print("Exiting program. Goodbye!")
             break
-        case _:
-            print("Invalid choice! Please select again.")
+
