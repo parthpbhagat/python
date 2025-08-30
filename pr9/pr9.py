@@ -76,8 +76,6 @@ class Data_analysis:
         plt.xlabel("Customer Name")
         plt.ylabel("Sales")
         plt.title("Bar Chart")
-        plt.xticks(rotation=45)
-        plt.tight_layout()
         plt.savefig("bar.pdf")
         plt.show()
 
@@ -87,8 +85,6 @@ class Data_analysis:
         plt.xlabel("Customer Name")
         plt.ylabel("Sales")
         plt.title("Line Plot")
-        plt.xticks(rotation=45)
-        plt.tight_layout()
         plt.savefig("line.pdf")
         plt.show()
 
@@ -248,5 +244,6 @@ while True:
         case 8:
             print("Exiting program. Goodbye!")
             break
+
 
 
